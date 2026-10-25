@@ -26,6 +26,7 @@ typedef enum {
     JNE,
     JA,
     JB,
+    PRINT,
     END_OF_FILE,
     NEWLINE,
     UNKNOWN

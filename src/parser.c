@@ -272,6 +272,13 @@ static Instruction parse_jb(Token **tokens) {
     return instruction;
 }
 
+static Instruction parse_print(Token **tokens) {
+    Instruction instruction;
+    instruction.type = I_PRINT;
+    next(tokens);
+    return instruction;
+}
+
 static void parse_label(Token **tokens, char **labels,
                         int *labels_lookup, size_t *labels_len,
                         int instruction_index) {
@@ -339,6 +346,9 @@ size_t parse(Token *tokens, Instruction *instructions, char **labels,
                 break;
             case JB:
                 instruction = parse_jb(&tokens);
+                break;
+            case PRINT:
+                instruction = parse_print(&tokens);
                 break;
             case IDENTIFIER:
                 parse_label(&tokens, labels, labels_lookup, labels_len, instruction_index);

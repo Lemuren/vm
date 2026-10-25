@@ -1,0 +1,8 @@
+PUSH 0
+PUSH 10  ; newline
+PUSH 111 ; o
+PUSH 108 ; l
+PUSH 108 ; l
+PUSH 101 ; e
+PUSH 72  ; H
+PRINT

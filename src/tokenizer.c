@@ -84,6 +84,9 @@ size_t tokenize(char *s, Token *tokens) {
         } else if (strcmp(stoken, "JB") == 0) {
             type = JB;
             text = "JB";
+        } else if (strcmp(stoken, "PRINT") == 0) {
+            type = PRINT;
+            text = "PRINT";
         } else if (strcmp(stoken, "\n") == 0) {
             type = NEWLINE;
             text = "";
@@ -211,6 +214,9 @@ void debug_print_token(Token token) {
             break;
         case JB:
             printf("{ JB, ");
+            break;
+        case PRINT:
+            printf("{ PRINT, ");
             break;
         case END_OF_FILE:
             printf("{ EOF, ");

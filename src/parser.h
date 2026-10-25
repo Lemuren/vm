@@ -18,7 +18,8 @@ typedef enum InstructionType {
     I_JE,
     I_JNE,
     I_JA,
-    I_JB
+    I_JB,
+    I_PRINT
 } InstructionType;
 
 typedef enum Register {

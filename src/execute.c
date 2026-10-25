@@ -221,6 +221,21 @@ void run(Instruction *program, size_t instructions_len, char **labels, int *labe
                     exit(1);
                 }
                 break;
+            case I_PRINT:
+                if (stackSize == 0) {
+                    fprintf(stderr, "Tried to PRINT empty stack!\n");
+                    exit(1);
+                }
+
+                for (char c = stack[stackSize-1]; (c = stack[stackSize-1]) != 0; stackSize--) {
+                    if (stackSize == 0) {
+                        fprintf(stderr, "Tried to PRINT empty stack!\n");
+                        exit(1);
+                    }
+                    printf("%c", c);
+                }
+
+                break;
             case I_PEEK:
                 if (stackSize == 0) {
                     fprintf(stderr, "PEEKed at empty stack\n");

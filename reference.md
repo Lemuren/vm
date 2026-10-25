@@ -66,6 +66,7 @@ Here you will find a complete instruction reference.
 | JNE         | LABEL            | Jump to a label (if top two values of stack are not equal).                            |
 | JA          | LABEL            | Jump to a label (if top of stack is greater than second top of stack).                 |
 | JB          | LABEL            | Jump to a label (if top of stack is lesser than second top of stack).                  |
+| PRINT       | -                | Print a C-style (null-terminated) string from the top of the stack.                    |
 
 
 Grammar
@@ -99,7 +100,8 @@ instruction = HLT
             | JE IDENTIFIER
             | JNE IDENTIFIER
             | JA IDENTIFIER
-            | JB IDENTIFIER ;
+            | JB IDENTIFIER
+            | PRINT ;
 
 register = "A" | "B" | "C" | "D" | "E" | "F" ;
 ```

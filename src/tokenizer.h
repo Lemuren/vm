@@ -21,6 +21,7 @@ typedef enum {
     SUB,
     MUL,
     DIV,
+    MOD,
     JMP,
     JE,
     JNE,

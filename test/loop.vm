@@ -1,0 +1,24 @@
+; Simple loop test.
+
+SET A 0
+
+loop:
+    ; Print A.
+    PUSH A
+    POP
+
+    ; Increment A.
+    PUSH A
+    PUSH 1
+    ADD
+    POP A
+
+    ; Loop until 100.
+    PUSH 100
+    PUSH A
+    JE done
+    POP F
+    POP F
+    JMP loop
+
+done: HLT

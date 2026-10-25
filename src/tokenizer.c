@@ -69,6 +69,12 @@ size_t tokenize(char *s, Token *tokens) {
         } else if (strcmp(stoken, "MUL") == 0) {
             type = MUL;
             text = "MUL";
+        } else if (strcmp(stoken, "DIV") == 0) {
+            type = DIV;
+            text = "DIV";
+        } else if (strcmp(stoken, "MOD") == 0) {
+            type = MOD;
+            text = "MOD";
         } else if (strcmp(stoken, "JMP") == 0) {
             type = JMP;
             text = "JMP";
@@ -199,6 +205,9 @@ void debug_print_token(Token token) {
             break;
         case DIV:
             printf("{ DIV, ");
+            break;
+        case MOD:
+            printf("{ MOD, ");
             break;
         case JMP:
             printf("{ JMP, ");

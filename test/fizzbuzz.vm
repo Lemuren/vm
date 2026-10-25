@@ -1,0 +1,83 @@
+; The classic "fizzbuzz" program.
+
+SET A 1     ; Current value.
+
+loop:
+    PUSH 3
+    PUSH A
+    MOD
+    PUSH 0
+    JNE skipfizz    ; A % 3 == 0?
+
+    PUSH 0
+    PUSH 122
+    PUSH 122
+    PUSH 105
+    PUSH 102
+    PRINT           ; Print "fizz"
+
+    skipfizz:
+    POP F
+    POP F           ; Flush stack.
+
+    PUSH 5
+    PUSH A
+    MOD
+    PUSH 0
+    JNE skipbuzz    ; A % 5 == 0?
+
+    PUSH 0
+    PUSH 122
+    PUSH 122
+    PUSH 117
+    PUSH 98
+    PRINT           ; Print "buzz"
+
+    skipbuzz:
+    POP F
+    POP F           ; Flush stack.
+
+    PUSH 3
+    PUSH A
+    MOD
+    PUSH 0
+    JE skipprint
+    POP F
+    POP F
+
+    PUSH 5
+    PUSH A
+    MOD
+    PUSH 0
+    JE skipprint
+    POP F
+    POP F
+
+    PUSH A
+    POP     ; Print A.
+    JMP inc
+
+    skipprint:
+    POP F
+    POP F
+    PUSH 0
+    PUSH 10
+    PRINT
+
+    ; Increment A and get ready for next iteration of the loop.
+    inc:
+    PUSH A      ; A = A + 1
+    PUSH 1
+    ADD
+    POP A
+
+    PUSH 100    ; Break if we've hit 100.
+    PUSH A
+    JE exit
+    POP F
+    POP F
+
+    JMP loop
+
+exit:
+    HLT

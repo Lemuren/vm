@@ -192,6 +192,13 @@ static Instruction parse_div(Token **tokens) {
     return instruction;
 }
 
+static Instruction parse_mod(Token **tokens) {
+    Instruction instruction;
+    instruction.type = I_MOD;
+    next(tokens);
+    return instruction;
+}
+
 static Instruction parse_jmp(Token **tokens) {
     Instruction instruction;
     instruction.type = I_JMP;
@@ -332,6 +339,9 @@ size_t parse(Token *tokens, Instruction *instructions, char **labels,
             case DIV:
                 instruction = parse_div(&tokens);
                 break;
+            case MOD:
+                instruction = parse_mod(&tokens);
+                break;
             case JMP:
                 instruction = parse_jmp(&tokens);
                 break;
@@ -402,6 +412,9 @@ void debug_print_instruction(Instruction instruction) {
                 break;
             case I_DIV:
                 printf("{ DIV, ");
+                break;
+            case I_MOD:
+                printf("{ MOD, ");
                 break;
             case I_JMP:
                 printf("{ JMP, ");

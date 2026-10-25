@@ -14,6 +14,7 @@ typedef enum InstructionType {
     I_SUB,
     I_MUL,
     I_DIV,
+    I_MOD,
     I_JMP,
     I_JE,
     I_JNE,

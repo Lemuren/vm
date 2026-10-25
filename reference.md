@@ -61,6 +61,7 @@ Here you will find a complete instruction reference.
 | SUB         | -                | Subtract the top two values of the stack and push it.                                  |
 | MUL         | -                | Multiply the top two values of the stack and push it.                                  |
 | DIV         | -                | Divide the top two values of the stack and push it.                                    |
+| MOD         | -                | Modulo the top two values of the stack and push it.                                    |
 | JMP         | LABEL            | Jump to a label.                                                                       |
 | JE          | LABEL            | Jump to a label (if top two values of stack are equal).                                |
 | JNE         | LABEL            | Jump to a label (if top two values of stack are not equal).                            |

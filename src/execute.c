@@ -153,6 +153,16 @@ void run(Instruction *program, size_t instructions_len, char **labels, int *labe
                 b = stack[--stackSize];
                 stack[stackSize++] = a / b;
                 break;
+            case I_MOD:
+                if (stackSize < 2) {
+                    fprintf(stderr, "attempted to modulo with stack size < 2\n");
+                    exit(1);
+                }
+                a = stack[--stackSize];
+                b = stack[--stackSize];
+                //printf("a: %d\tb: %d\ta mod b: %d\n", a, b, a % b);
+                stack[stackSize++] = a % b;
+                break;
             case I_JMP:
                 for (index = 0; index < labels_len; index++) {
                     if (strcmp(instruction.label, labels[index]) == 0) {
@@ -234,6 +244,9 @@ void run(Instruction *program, size_t instructions_len, char **labels, int *labe
                     }
                     printf("%c", c);
                 }
+
+                // Consume dangling zero.
+                stackSize--;
 
                 break;
             case I_PEEK:

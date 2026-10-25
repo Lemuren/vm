@@ -18,12 +18,16 @@ stapel PROGRAM
 Check out the language [reference](reference.md) and [example programs](examples/).
 
 
+## What You'll Need
+A C compiler and (optionally) [just](https://just.systems/) if you want
+to use the pre-made recipes.
+
+
 ## Limitations and Bugs
 This is very much a WIP project, so beware!
 
-    * I haven't gotten around to resizable arrays yet, so very
-      long programs or labels will crash it!
-    * The code needs some refactoring and cleanup.
-    * There's probably bugs!
-    * Error messages for invalid programs is quite obtuse.
-
+* I haven't gotten around to resizable arrays yet, so very
+  long programs or labels will crash it!
+* The code needs some refactoring and cleanup.
+* There's probably bugs!
+* Error messages for invalid programs is quite obtuse.

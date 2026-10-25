@@ -9,7 +9,7 @@ typedef enum {
     REG_E,
     REG_F,
     SEMICOLON,
-    COMMA,
+    COLON,
     IDENTIFIER,
     NUMBER,
     HLT,
@@ -27,7 +27,8 @@ typedef enum {
     JA,
     JB,
     END_OF_FILE,
-    NEWLINE
+    NEWLINE,
+    UNKNOWN
 } TokenType;
 
 // TODO: Fixed-sized text field is not ideal.
@@ -35,5 +36,9 @@ typedef struct {
     TokenType type;
     char text[64];
 } Token;
+
+size_t tokenize(char*, Token*);
+void debug_print_tokens(Token*, size_t);
+void debug_print_token(Token);
 
 #endif

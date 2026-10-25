@@ -3,7 +3,7 @@
 didfail=0
 
 for program in test/*.vm; do
-    echo -n "${program%.*}: "
+    echo -en "${program%.*}:\t"
     diff <(./stapel ${program}) ${program%.*}.out >/dev/null
     status=$?
     if [ $status -eq 0 ]; then

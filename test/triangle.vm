@@ -1,0 +1,33 @@
+; Compute triangular numbers.
+; That is: 0, 1, 3, 6, 10, 15, 21, ...
+
+SET A 0 ; Accumulator.
+SET B 1 ; Current number to be added.
+
+loop:
+    ; Print current accumulator.
+    PUSH A
+    POP
+
+    ; A = A + B
+    PUSH A
+    PUSH B
+    ADD
+    POP A
+
+    ; B = B + 1
+    PUSH B
+    PUSH 1
+    ADD
+    POP B
+
+    ; If accumulator is too large, we're done!
+    PUSH 100
+    PUSH A
+    JA done
+    POP F
+    POP F
+
+    JMP loop
+
+done: HLT

@@ -1,0 +1,36 @@
+; Calculate 6! by repeatedly multiplying an accumulator.
+; Expected output:
+; 1
+; 2
+; 6
+; 24
+; 120
+; 720
+
+SET A 1       ; Accumulator
+SET B 1       ; Counter
+
+loop:
+    PUSH A
+    PUSH B
+    MUL
+    POP A      ; A = A * B
+
+    PUSH A
+    POP        ; Print the current factorial
+
+    PUSH B
+    PUSH 1
+    ADD
+    POP B      ; B = B + 1
+
+    PUSH B
+    PUSH 7
+    JE done    ; Stop when B reaches 7
+    POP C
+    POP C
+
+    JMP loop
+
+done:
+    HLT

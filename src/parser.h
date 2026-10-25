@@ -22,7 +22,7 @@ typedef enum InstructionType {
 } InstructionType;
 
 typedef enum Register {
-    R_REG_A, R_REG_B, R_REG_C, R_REG_D, R_REG_E, R_REG_F
+    R_NONE, R_REG_A, R_REG_B, R_REG_C, R_REG_D, R_REG_E, R_REG_F
 } Register;
 
 typedef struct {

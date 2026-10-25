@@ -34,9 +34,9 @@ static bool isRegister(Token t) {
 }
 
 static Instruction parse_halt(Token **tokens) {
-    (void)tokens;
     Instruction instruction;
     instruction.type = I_HLT;
+    next(tokens);
     return instruction;
 }
 
@@ -53,6 +53,7 @@ static Instruction parse_push(Token **tokens) {
 
     if (nextToken.type == NUMBER) {
         instruction.val = atoi(nextToken.text);
+        instruction.reg = R_NONE;
     } else if (nextToken.type == REG_A) {
         instruction.reg = R_REG_A;
     } else if (nextToken.type == REG_B) {
@@ -92,6 +93,8 @@ static Instruction parse_pop(Token **tokens) {
         } else if (nextToken.type == REG_F) {
             instruction.reg = R_REG_F;
         }
+    } else {
+        instruction.reg = R_NONE;
     }
 
     return instruction;
@@ -292,6 +295,8 @@ size_t parse(Token *tokens, Instruction *instructions, char **labels,
     Token t;
     Instruction instruction;
     for (t = peek(tokens); t.type != END_OF_FILE; t = peek(tokens)) {
+        printf("Looking at token: ");
+        debug_print_token(t);
         switch (t.type) {
             case HLT:
                 instruction = parse_halt(&tokens);
@@ -337,9 +342,10 @@ size_t parse(Token *tokens, Instruction *instructions, char **labels,
                 break;
             case IDENTIFIER:
                 parse_label(&tokens, labels, labels_lookup, labels_len, instruction_index);
-                break;
+                continue;
             default:
-                printf("Unexpected token type\n");
+                printf("Unexpected token type: %d\n", t.type);
+                debug_print_token(*tokens);
                 exit(1);
                 break;
         }

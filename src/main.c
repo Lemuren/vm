@@ -3,6 +3,7 @@
 
 #include "tokenizer.h"
 #include "parser.h"
+#include "execute.h"
 
 
 int main(int argc, char **argv) {
@@ -53,6 +54,8 @@ int main(int argc, char **argv) {
     }
 
     printf("\n==============\n\n");
+
+    run(instructions, instructions_len, labels, labels_lookup, labels_len);
 
 
 

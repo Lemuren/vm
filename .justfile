@@ -11,6 +11,9 @@ build:
     {{CC}} {{CFLAGS}} src/*.c -o stapel
     chmod +x stapel
 
+# Test.
+test: build
+    ./runtests.sh
 
 # Remove build artifacts.
 clean:

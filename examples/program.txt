@@ -1,0 +1,25 @@
+; Fibonacci Program, up until 100.
+PUSH 100
+PUSH 1
+PUSH 0
+
+loop:
+    ; Print current number.
+    PEEK A
+    POP
+
+    ; If current number is large enough we exit.
+    JA exit
+
+    ; Calculate next Fibonacci number in the sequence.
+    PEEK B
+    PUSH A
+    ADD
+    PUSH B
+
+    JMP loop
+
+exit: HLT
+
+
+

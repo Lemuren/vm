@@ -295,8 +295,8 @@ size_t parse(Token *tokens, Instruction *instructions, char **labels,
     Token t;
     Instruction instruction;
     for (t = peek(tokens); t.type != END_OF_FILE; t = peek(tokens)) {
-        printf("Looking at token: ");
-        debug_print_token(t);
+        //printf("Looking at token: ");
+        //debug_print_token(t);
         switch (t.type) {
             case HLT:
                 instruction = parse_halt(&tokens);

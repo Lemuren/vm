@@ -1,0 +1,77 @@
+; ==========================================
+; PRIME NUMBER EXPLORER
+; Print all primes from 2 to 100.
+; ==========================================
+
+PUSH 0
+PUSH 10
+PUSH 115
+PUSH 114
+PUSH 101
+PUSH 98
+PUSH 109
+PUSH 117
+PUSH 78
+PUSH 32
+PUSH 101
+PUSH 109
+PUSH 105
+PUSH 114
+PUSH 80
+PRINT
+
+SET A 2       ; Candidate number.
+
+candidate:
+    ; We'll try divisors starting at 2.
+    SET B 2
+
+divisor:
+    ; If B * B > A, A is prime.
+    PUSH A
+    PUSH B
+    PUSH B
+    MUL
+    JA is_prime
+    POP F
+    POP F
+
+    ; If A % B == 0, A is composite.
+    PUSH B
+    PUSH A
+    MOD
+    PUSH 0
+    JE next_candidate
+    POP F
+    POP F
+
+    ; Try the next divisor.
+    PUSH B
+    PUSH 1
+    ADD
+    POP B
+    JMP divisor
+
+is_prime:
+    PUSH A
+    POP
+    JMP next_candidate
+
+next_candidate:
+    POP F
+    POP F
+    PUSH A
+    PUSH 1
+    ADD
+    POP A
+
+    PUSH 101
+    PUSH A
+    JE exit
+    POP F
+    POP F
+
+    JMP candidate
+
+exit:
+    HLT

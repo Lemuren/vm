@@ -3,6 +3,19 @@
 
 #include "parser.h"
 
-void run(Instruction*, size_t, char**, int*, size_t);
+typedef struct {
+    bool running;
+    int stack[1024];
+    size_t stackSize;
+    size_t reg_ip;
+    int reg_a;
+    int reg_b;
+    int reg_c;
+    int reg_d;
+    int reg_e;
+    int reg_f;
+} State;
+
+void run(Instruction*, char**, int*, size_t, State*);
 
 #endif

@@ -44,7 +44,7 @@ int main(int argc, char **argv) {
     }
     int labels_lookup[1024];
     size_t labels_len = 0;
-    size_t instructions_len = parse(tokens, instructions, labels, labels_lookup, &labels_len);
+    parse(tokens, instructions, labels, labels_lookup, &labels_len);
     //debug_print_instructions(instructions, instructions_len);
 
     //printf("\n==============\n\n");
@@ -56,7 +56,31 @@ int main(int argc, char **argv) {
 
     // printf("\n==============\n\n");
 
-    run(instructions, instructions_len, labels, labels_lookup, labels_len);
+    // Set up state and start running the program.
+    State state = {
+        .running    = true,
+        .stack      = { 0 },
+        .stackSize  = 0,
+        .reg_ip     = 0,
+        .reg_a     = 0,
+        .reg_b     = 0,
+        .reg_c     = 0,
+        .reg_d     = 0,
+        .reg_e     = 0,
+        .reg_f     = 0
+    };
+    while (state.running) {
+        run(instructions, labels,
+            labels_lookup, labels_len, &state);
+
+        // printf("State: { %ld | %d %d %d %d %d %d | [ ",
+        //        state.reg_ip, state.reg_a, state.reg_b, state.reg_c,
+        //        state.reg_d, state.reg_e, state.reg_f);
+        // for (size_t i = 0; i < state.stackSize; i++) {
+        //     printf("%d ", state.stack[i]);
+        // }
+        // printf("]\n");
+    }
 
 
 

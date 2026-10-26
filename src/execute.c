@@ -4,279 +4,295 @@
 #include "execute.h"
 
 
-void run(Instruction *program, size_t instructions_len, char **labels, int *labels_lookup, size_t labels_len) {
-    int stack[1024];
-    size_t stackSize = 0;
+void run(Instruction *program, char **labels,
+         int *labels_lookup, size_t labels_len, State *s) {
 
-    size_t reg_ip = 0;
-    int reg_a  = 0;
-    int reg_b  = 0;
-    int reg_c  = 0;
-    int reg_d  = 0;
-    int reg_e  = 0;
-    int reg_f  = 0;
 
-    int a, b;
+    // Read instruction and increment the instruction pointer.
+    Instruction instruction = program[s->reg_ip++];
 
-    // Read, execute, loop.
-    for (reg_ip = 0; reg_ip < instructions_len; reg_ip++) {
-        size_t index;
-        Instruction instruction = program[reg_ip];
-        //printf("Running instruction: ");
-        //debug_print_instruction(instruction);
+    // HLT instruction.
+    if (instruction.type == I_HLT) {
+        s->running = false;
+        return;
+    }
 
-        // printf("Stack: [ ");
-        // for (size_t i = 0; i < stackSize; i++) {
-        //     printf("%d ", stack[i]);
-        // }
-        // printf("]\n");
-
-        switch (instruction.type) {
-            case I_HLT:
-                exit(0);
+    // PUSH instruction.
+    if (instruction.type == I_PUSH) {
+        switch (instruction.reg) {
+            case R_REG_A:
+                s->stack[s->stackSize++] = s->reg_a;
                 break;
-            case I_PUSH:
-                switch (instruction.reg) {
-                    case R_REG_A:
-                        stack[stackSize++] = reg_a;
-                        break;
-                    case R_REG_B:
-                        stack[stackSize++] = reg_b;
-                        break;
-                    case R_REG_C:
-                        stack[stackSize++] = reg_c;
-                        break;
-                    case R_REG_D:
-                        stack[stackSize++] = reg_d;
-                        break;
-                    case R_REG_E:
-                        stack[stackSize++] = reg_e;
-                        break;
-                    case R_REG_F:
-                        stack[stackSize++] = reg_f;
-                        break;
-                    case R_NONE:
-                        stack[stackSize++] = instruction.val;
-                        break;
-                }
+            case R_REG_B:
+                s->stack[s->stackSize++] = s->reg_b;
                 break;
-            case I_POP:
-                if (stackSize == 0) {
-                    fprintf(stderr, "Tried to POP empty stack!\n");
-                    exit(1);
-                }
-                a = stack[--stackSize];
-                if (instruction.reg == R_NONE) {
-                    printf("%d\n", a);
-                }
-
-                switch (instruction.reg) {
-                    case R_REG_A:
-                        reg_a = a;
-                        break;
-                    case R_REG_B:
-                        reg_b = a;
-                        break;
-                    case R_REG_C:
-                        reg_c = a;
-                        break;
-                    case R_REG_D:
-                        reg_d = a;
-                        break;
-                    case R_REG_E:
-                        reg_e = a;
-                        break;
-                    case R_REG_F:
-                        reg_f = a;
-                        break;
-                    case R_NONE:
-                        break;
-                }
+            case R_REG_C:
+                s->stack[s->stackSize++] = s->reg_c;
                 break;
-            case I_SET:
-                switch (instruction.reg) {
-                    case R_REG_A:
-                        reg_a = instruction.val;
-                        break;
-                    case R_REG_B:
-                        reg_b = instruction.val;
-                        break;
-                    case R_REG_C:
-                        reg_c = instruction.val;
-                        break;
-                    case R_REG_D:
-                        reg_d = instruction.val;
-                        break;
-                    case R_REG_E:
-                        reg_e = instruction.val;
-                        break;
-                    case R_REG_F:
-                        reg_f = instruction.val;
-                        break;
-                    case R_NONE:
-                        break;
-                }
+            case R_REG_D:
+                s->stack[s->stackSize++] = s->reg_d;
                 break;
-            case I_ADD:
-                if (stackSize < 2) {
-                    fprintf(stderr, "attempted to add with stack size < 2\n");
-                    exit(1);
-                }
-                a = stack[--stackSize];
-                b = stack[--stackSize];
-                stack[stackSize++] = a + b;
+            case R_REG_E:
+                s->stack[s->stackSize++] = s->reg_e;
                 break;
-            case I_SUB:
-                if (stackSize < 2) {
-                    fprintf(stderr, "attempted to subtract with stack size < 2\n");
-                    exit(1);
-                }
-                a = stack[--stackSize];
-                b = stack[--stackSize];
-                stack[stackSize++] = a - b;
+            case R_REG_F:
+                s->stack[s->stackSize++] = s->reg_f;
                 break;
-            case I_MUL:
-                if (stackSize < 2) {
-                    fprintf(stderr, "attempted to multiply with stack size < 2\n");
-                    exit(1);
-                }
-                a = stack[--stackSize];
-                b = stack[--stackSize];
-                stack[stackSize++] = a * b;
-                break;
-            case I_DIV:
-                if (stackSize < 2) {
-                    fprintf(stderr, "attempted to divide with stack size < 2\n");
-                    exit(1);
-                }
-                a = stack[--stackSize];
-                b = stack[--stackSize];
-                stack[stackSize++] = a / b;
-                break;
-            case I_MOD:
-                if (stackSize < 2) {
-                    fprintf(stderr, "attempted to modulo with stack size < 2\n");
-                    exit(1);
-                }
-                a = stack[--stackSize];
-                b = stack[--stackSize];
-                //printf("a: %d\tb: %d\ta mod b: %d\n", a, b, a % b);
-                stack[stackSize++] = a % b;
-                break;
-            case I_JMP:
-                for (index = 0; index < labels_len; index++) {
-                    if (strcmp(instruction.label, labels[index]) == 0) {
-                        reg_ip = labels_lookup[index] - 1;
-                        break;
-                    }
-                }
-                if (index == labels_len) {
-                    printf("Unknown label!\n");
-                    exit(1);
-                }
-                break;
-            case I_JE:
-                for (index = 0; index < labels_len; index++) {
-                    if (strcmp(instruction.label, labels[index]) == 0) {
-                        if (stack[0] == stack[1]) {
-                            reg_ip = labels_lookup[index] - 1;
-                        }
-                        break;
-                    }
-                }
-                if (index == labels_len) {
-                    printf("Unknown label!\n");
-                    exit(1);
-                }
-                break;
-            case I_JNE:
-                for (index = 0; index < labels_len; index++) {
-                    if (strcmp(instruction.label, labels[index]) == 0) {
-                        if (stack[0] != stack[1]) {
-                            reg_ip = labels_lookup[index] - 1;
-                        }
-                        break;
-                    }
-                }
-                if (index == labels_len) {
-                    printf("Unknown label!\n");
-                    exit(1);
-                }
-                break;
-            case I_JA:
-                for (index = 0; index < labels_len; index++) {
-                    if (strcmp(instruction.label, labels[index]) == 0) {
-                        if (stack[stackSize-1] > stack[stackSize-2]) {
-                            reg_ip = labels_lookup[index] - 1;
-                        }
-                        break;
-                    }
-                }
-                if (index == labels_len) {
-                    printf("Unknown label!\n");
-                    exit(1);
-                }
-                break;
-            case I_JB:
-                for (index = 0; index < labels_len; index++) {
-                    if (strcmp(instruction.label, labels[index]) == 0) {
-                        if (stack[stackSize-1] < stack[stackSize-2]) {
-                            reg_ip = labels_lookup[index] - 1;
-                        }
-                        break;
-                    }
-                }
-                if (index == labels_len) {
-                    printf("Unknown label!\n");
-                    exit(1);
-                }
-                break;
-            case I_PRINT:
-                if (stackSize == 0) {
-                    fprintf(stderr, "Tried to PRINT empty stack!\n");
-                    exit(1);
-                }
-
-                for (char c = stack[stackSize-1]; (c = stack[stackSize-1]) != 0; stackSize--) {
-                    if (stackSize == 0) {
-                        fprintf(stderr, "Tried to PRINT empty stack!\n");
-                        exit(1);
-                    }
-                    printf("%c", c);
-                }
-
-                // Consume dangling zero.
-                stackSize--;
-
-                break;
-            case I_PEEK:
-                if (stackSize == 0) {
-                    fprintf(stderr, "PEEKed at empty stack\n");
-                    exit(1);
-                }
-                switch (instruction.reg) {
-                    case R_REG_A:
-                        reg_a = stack[stackSize-1];
-                        break;
-                    case R_REG_B:
-                        reg_b = stack[stackSize-1];
-                        break;
-                    case R_REG_C:
-                        reg_c = stack[stackSize-1];
-                        break;
-                    case R_REG_D:
-                        reg_d = stack[stackSize-1];
-                        break;
-                    case R_REG_E:
-                        reg_e = stack[stackSize-1];
-                        break;
-                    case R_REG_F:
-                        reg_f = stack[stackSize-1];
-                        break;
-                    case R_NONE:
-                        break;
-                }
+            case R_NONE:
+                s->stack[s->stackSize++] = instruction.val;
                 break;
         }
+        return;
+    }
+
+    // POP instruction.
+    if (instruction.type == I_POP) {
+        if (s->stackSize == 0) {
+            fprintf(stderr, "Tried to POP empty stack!\n");
+            exit(1);
+        }
+
+        switch (instruction.reg) {
+            case R_REG_A:
+                s->reg_a = s->stack[--(s->stackSize)];
+                break;
+            case R_REG_B:
+                s->reg_b = s->stack[--(s->stackSize)];
+                break;
+            case R_REG_C:
+                s->reg_c = s->stack[--(s->stackSize)];
+                break;
+            case R_REG_D:
+                s->reg_d = s->stack[--(s->stackSize)];
+                break;
+            case R_REG_E:
+                s->reg_e = s->stack[--(s->stackSize)];
+                break;
+            case R_REG_F:
+                s->reg_f = s->stack[--(s->stackSize)];
+                break;
+            case R_NONE:
+                printf("%d\n", s->stack[--(s->stackSize)]);
+                break;
+        }
+        return;
+    }
+
+    // PEEK instruction.
+    if (instruction.type == I_PEEK) {
+        if (s->stackSize == 0) {
+            fprintf(stderr, "PEEKed at empty stack\n");
+            exit(1);
+        }
+        switch (instruction.reg) {
+            case R_REG_A:
+                s->reg_a = s->stack[s->stackSize-1];
+                break;
+            case R_REG_B:
+                s->reg_b = s->stack[s->stackSize-1];
+                break;
+            case R_REG_C:
+                s->reg_c = s->stack[s->stackSize-1];
+                break;
+            case R_REG_D:
+                s->reg_d = s->stack[s->stackSize-1];
+                break;
+            case R_REG_E:
+                s->reg_e = s->stack[s->stackSize-1];
+                break;
+            case R_REG_F:
+                s->reg_f = s->stack[s->stackSize-1];
+                break;
+            case R_NONE:
+                // We should never be able to get here.
+                break;
+        }
+        return;
+    }
+
+    // SET instruction.
+    if (instruction.type == I_SET) {
+        switch (instruction.reg) {
+            case R_REG_A:
+                s->reg_a = instruction.val;
+                break;
+            case R_REG_B:
+                s->reg_b = instruction.val;
+                break;
+            case R_REG_C:
+                s->reg_c = instruction.val;
+                break;
+            case R_REG_D:
+                s->reg_d = instruction.val;
+                break;
+            case R_REG_E:
+                s->reg_e = instruction.val;
+                break;
+            case R_REG_F:
+                s->reg_f = instruction.val;
+                break;
+            case R_NONE:
+                // We should never be able to get here.
+                break;
+        }
+        return;
+    }
+
+    // ADD instruction.
+    if (instruction.type == I_ADD) {
+        if (s->stackSize < 2) {
+            fprintf(stderr, "attempted to add with stack size < 2\n");
+            exit(1);
+        }
+        int a = s->stack[--(s->stackSize)];
+        int b = s->stack[--(s->stackSize)];
+        s->stack[s->stackSize++] = a + b;
+        return;
+    }
+
+    // SUB instruction.
+    if (instruction.type == I_SUB) {
+        if (s->stackSize < 2) {
+            fprintf(stderr, "attempted to subtract with stack size < 2\n");
+            exit(1);
+        }
+        int a = s->stack[--(s->stackSize)];
+        int b = s->stack[--(s->stackSize)];
+        s->stack[s->stackSize++] = a - b;
+        return;
+    }
+
+    // MUL instruction.
+    if (instruction.type == I_MUL) {
+        if (s->stackSize < 2) {
+            fprintf(stderr, "attempted to multiply with stack size < 2\n");
+            exit(1);
+        }
+        int a = s->stack[--(s->stackSize)];
+        int b = s->stack[--(s->stackSize)];
+        s->stack[s->stackSize++] = a * b;
+        return;
+    }
+
+    // DIV instruction.
+    if (instruction.type == I_DIV) {
+        if (s->stackSize < 2) {
+            fprintf(stderr, "attempted to divide with stack size < 2\n");
+            exit(1);
+        }
+        int a = s->stack[--(s->stackSize)];
+        int b = s->stack[--(s->stackSize)];
+        s->stack[s->stackSize++] = a / b;
+        return;
+    }
+
+    // MOD instruction.
+    if (instruction.type == I_MOD) {
+        if (s->stackSize < 2) {
+            fprintf(stderr, "attempted to modulo with stack size < 2\n");
+            exit(1);
+        }
+        int a = s->stack[--(s->stackSize)];
+        int b = s->stack[--(s->stackSize)];
+        s->stack[s->stackSize++] = a % b;
+        return;
+    }
+
+    // JMP instruction.
+    if (instruction.type == I_JMP) {
+        for (size_t i = 0; i < labels_len; i++) {
+            if (strcmp(instruction.label, labels[i]) == 0) {
+                s->reg_ip = labels_lookup[i];
+                return;
+            }
+        }
+
+        fprintf(stderr, "Unknown label!\n");
+        exit(1);
+        return;
+    }
+
+    // JE instruction.
+    if (instruction.type == I_JE) {
+        for (size_t i = 0; i < labels_len; i++) {
+            if (strcmp(instruction.label, labels[i]) == 0) {
+                if (s->stack[s->stackSize-1] == s->stack[s->stackSize-2]) {
+                    s->reg_ip = labels_lookup[i];
+                }
+                return;
+            }
+        }
+
+        printf("Unknown label!\n");
+        exit(1);
+        return;
+    }
+
+    // JNE instruction.
+    if (instruction.type == I_JNE) {
+        for (size_t i = 0; i < labels_len; i++) {
+            if (strcmp(instruction.label, labels[i]) == 0) {
+                if (s->stack[s->stackSize-1] != s->stack[s->stackSize-2]) {
+                    s->reg_ip = labels_lookup[i];
+                }
+                return;
+            }
+        }
+
+        printf("Unknown label!\n");
+        exit(1);
+        return;
+    }
+
+    // JA instruction.
+    if (instruction.type == I_JA) {
+        for (size_t i = 0; i < labels_len; i++) {
+            if (strcmp(instruction.label, labels[i]) == 0) {
+                if (s->stack[s->stackSize-1] > s->stack[s->stackSize-2]) {
+                    s->reg_ip = labels_lookup[i];
+                }
+                return;
+            }
+        }
+
+        printf("Unknown label!\n");
+        exit(1);
+        return;
+    }
+
+    // JB instruction.
+    if (instruction.type == I_JB) {
+        for (size_t i = 0; i < labels_len; i++) {
+            if (strcmp(instruction.label, labels[i]) == 0) {
+                if (s->stack[s->stackSize-1] < s->stack[s->stackSize-2]) {
+                    s->reg_ip = labels_lookup[i];
+                }
+                return;
+            }
+        }
+
+        printf("Unknown label!\n");
+        exit(1);
+        return;
+    }
+
+    // PRINT instruction.
+    if (instruction.type == I_PRINT) {
+        if (s->stackSize == 0) {
+            fprintf(stderr, "Tried to PRINT empty stack!\n");
+            exit(1);
+        }
+
+        for (char c = s->stack[s->stackSize-1]; (c = s->stack[s->stackSize-1]) != 0; s->stackSize--) {
+            if (s->stackSize == 0) {
+                fprintf(stderr, "Tried to PRINT empty stack!\n");
+                exit(1);
+            }
+            printf("%c", c);
+        }
+
+        // Consume dangling zero.
+        s->stackSize--;
+        return;
     }
 }

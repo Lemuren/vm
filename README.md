@@ -16,6 +16,7 @@ stapel PROGRAM
 ```
 
 Check out the language [reference](reference.md) and [example programs](examples/).
+You can find even more example programs in the [test](test/) directory.
 
 
 ## What You'll Need

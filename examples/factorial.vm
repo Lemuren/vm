@@ -1,4 +1,4 @@
-; Calculate 7! by repeatedly multiplying an accumulator.
+; Calculate 6! by repeatedly multiplying an accumulator.
 ; Expected output:
 ; 1
 ; 2

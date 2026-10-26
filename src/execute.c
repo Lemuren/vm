@@ -5,9 +5,8 @@
 
 
 void run(Instruction *program, char **labels,
-         int *labels_lookup, size_t labels_len, State *s) {
-
-
+         size_t *labels_lookup, size_t labels_len, State *s,
+         char **outputBuffer) {
     // Read instruction and increment the instruction pointer.
     Instruction instruction = program[s->reg_ip++];
 
@@ -72,7 +71,13 @@ void run(Instruction *program, char **labels,
                 s->reg_f = s->stack[--(s->stackSize)];
                 break;
             case R_NONE:
-                printf("%d\n", s->stack[--(s->stackSize)]);
+                if (outputBuffer) {
+                    int len = 0;
+                    sprintf(*outputBuffer, "%d\n%n", s->stack[--(s->stackSize)], &len);
+                    *outputBuffer += len;
+                } else {
+                    printf("%d\n", s->stack[--(s->stackSize)]);
+                }
                 break;
         }
         return;
@@ -288,7 +293,11 @@ void run(Instruction *program, char **labels,
                 fprintf(stderr, "Tried to PRINT empty stack!\n");
                 exit(1);
             }
-            printf("%c", c);
+            if (outputBuffer) {
+                sprintf((*outputBuffer)++, "%c", c);
+            } else {
+                printf("%c", c);
+            }
         }
 
         // Consume dangling zero.

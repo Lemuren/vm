@@ -1,5 +1,5 @@
 # Stapel
-Stapel is a tiny, visual (soon!) stack machine and language.
+Stapel is a tiny, visual stack machine and language.
 
 To build, test, and clean:
 
@@ -12,7 +12,7 @@ just clean  # Remove build artifacts.
 Usage:
 
 ```sh
-stapel PROGRAM
+stapel PROGRAM [--plain]
 ```
 
 Check out the language [reference](reference.md) and [example programs](examples/).
@@ -21,7 +21,8 @@ You can find even more example programs in the [test](test/) directory.
 
 ## What You'll Need
 A C compiler and (optionally) [just](https://just.systems/) if you want
-to use the pre-made recipes.
+to use the pre-made recipes. You'll also need the
+`ncurses` development libraries.
 
 
 ## Limitations and Bugs

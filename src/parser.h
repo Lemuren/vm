@@ -35,7 +35,7 @@ typedef struct {
 } Instruction;
 
 size_t parse(Token*, Instruction*, char**,
-             int*, size_t*);
+             size_t*, size_t*);
 void debug_print_instructions(Instruction*, size_t);
 void debug_print_instruction(Instruction);
 

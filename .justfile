@@ -1,7 +1,7 @@
 set quiet
 
 CC := "gcc"
-CFLAGS := "-Wall -Wextra -std=c23 -pedantic -Werror -I src/ -g"
+CFLAGS := "-Wall -Wextra -std=c23 -pedantic -Werror -lncurses -I src/ -g"
 
 _default:
     just --list

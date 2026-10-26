@@ -16,6 +16,6 @@ typedef struct {
     int reg_f;
 } State;
 
-void run(Instruction*, char**, int*, size_t, State*);
+void run(Instruction*, char**, size_t*, size_t, State*, char**);
 
 #endif

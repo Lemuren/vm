@@ -25,7 +25,7 @@ loop:
     POP B      ; B = B + 1
 
     PUSH B
-    PUSH 7
+    PUSH 3
     JE done    ; Stop when B reaches 7
     POP C
     POP C

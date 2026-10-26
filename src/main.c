@@ -1,21 +1,35 @@
 #include <stdlib.h>
+#include <stdbool.h>
+#include <string.h>
 #include <stdio.h>
 
 #include "tokenizer.h"
 #include "parser.h"
 #include "execute.h"
+#include "render.h"
 
 
 int main(int argc, char **argv) {
+    // TODO: Proper argument parsing.
+    bool plain = false;
+
     // Open input program file.
-    if (argc != 2) {
-        fprintf(stderr, "usage: stackmachine PROGRAM\n");
+    if (argc < 2) {
+        fprintf(stderr, "usage: stackmachine PROGRAM [--plain]\n");
         exit(1);
     }
     FILE *f = fopen(argv[1], "r");
     if (!f) {
         fprintf(stderr, "could not open '%s'\n", argv[1]);
         exit(1);
+    }
+
+    if (argc == 3) {
+        if (strcmp(argv[2], "--plain") == 0) {
+            plain = true;
+        } else {
+            fprintf(stderr, "usage: stackmachine PROGRAM [--plain]\n");
+        }
     }
 
     // Read entire file into a string.
@@ -30,11 +44,7 @@ int main(int argc, char **argv) {
 
     // Tokenize input.
     Token tokens[1024];
-    //size_t tokens_len = tokenize(buffer, tokens);
     tokenize(buffer, tokens);
-    // debug_print_tokens(tokens, tokens_len);
-
-    // printf("\n==============\n\n");
 
     // Parse the tokens into instructions.
     Instruction instructions[1024];
@@ -42,19 +52,12 @@ int main(int argc, char **argv) {
     for (int i = 0; i < 1024; i++) {
         labels[i] = calloc(64, sizeof(char));
     }
-    int labels_lookup[1024];
+    size_t labels_lookup[1024];
     size_t labels_len = 0;
-    parse(tokens, instructions, labels, labels_lookup, &labels_len);
-    //debug_print_instructions(instructions, instructions_len);
+    size_t instructions_len = parse(tokens, instructions, labels, labels_lookup, &labels_len);
 
-    //printf("\n==============\n\n");
-
-    // printf("Labels:\n");
-    // for (size_t i = 0; i < labels_len; i++) {
-    //     printf("\t%s: %d\n", labels[i], labels_lookup[i]);
-    // }
-
-    // printf("\n==============\n\n");
+    // Initialize renderer.
+    if (!plain) initRender();
 
     // Set up state and start running the program.
     State state = {
@@ -69,22 +72,22 @@ int main(int argc, char **argv) {
         .reg_e     = 0,
         .reg_f     = 0
     };
-    while (state.running) {
-        run(instructions, labels,
-            labels_lookup, labels_len, &state);
+    char *outputBuffer = calloc(1024, sizeof(char));
+    char *origBuffer = outputBuffer;
 
-        // printf("State: { %ld | %d %d %d %d %d %d | [ ",
-        //        state.reg_ip, state.reg_a, state.reg_b, state.reg_c,
-        //        state.reg_d, state.reg_e, state.reg_f);
-        // for (size_t i = 0; i < state.stackSize; i++) {
-        //     printf("%d ", state.stack[i]);
-        // }
-        // printf("]\n");
+    while (state.running) {
+        if (!plain) {
+            update_screen(state, instructions, instructions_len,
+                        labels, labels_lookup, labels_len, origBuffer);
+        }
+        run(instructions, labels,
+            labels_lookup, labels_len, &state, plain ? NULL : &outputBuffer);
+    }
+    if (!plain) {
+        update_screen(state, instructions, instructions_len,
+                        labels, labels_lookup, labels_len, origBuffer);
+        deinitRender();
     }
 
-
-
     return 0;
-
-
 }

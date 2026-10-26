@@ -287,7 +287,7 @@ static Instruction parse_print(Token **tokens) {
 }
 
 static void parse_label(Token **tokens, char **labels,
-                        int *labels_lookup, size_t *labels_len,
+                        size_t *labels_lookup, size_t *labels_len,
                         int instruction_index) {
     strcpy(labels[*labels_len], (*tokens)->text);
     labels_lookup[(*labels_len)++] = instruction_index;
@@ -303,7 +303,7 @@ static void parse_label(Token **tokens, char **labels,
 
 // Parse an array of tokens into an array of instructions.
 size_t parse(Token *tokens, Instruction *instructions, char **labels,
-             int *labels_lookup, size_t *labels_len) {
+             size_t *labels_lookup, size_t *labels_len) {
     size_t instruction_index = 0;
     size_t instructions_len = 0;
     Token t;

@@ -68,6 +68,7 @@ Here you will find a complete instruction reference.
 | JA          | LABEL            | Jump to a label (if top of stack is greater than second top of stack).                 |
 | JB          | LABEL            | Jump to a label (if top of stack is lesser than second top of stack).                  |
 | PRINT       | -                | Print a C-style (null-terminated) string from the top of the stack.                    |
+| SCAN        | -                | Scans input, storing it either as an integer or a C-style string on the stack.         |
 
 
 Grammar
@@ -102,7 +103,8 @@ instruction = HLT
             | JNE IDENTIFIER
             | JA IDENTIFIER
             | JB IDENTIFIER
-            | PRINT ;
+            | PRINT
+            | SCAN ;
 
 register = "A" | "B" | "C" | "D" | "E" | "F" ;
 ```

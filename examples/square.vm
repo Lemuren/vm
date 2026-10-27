@@ -1,0 +1,10 @@
+; Program to compute squares.
+
+SCAN    ; Read in number.
+
+POP A   ; Calculate the square.
+PUSH A
+PUSH A
+MUL
+
+POP     ; Output the square.

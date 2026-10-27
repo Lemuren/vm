@@ -221,7 +221,7 @@ void run(Instruction *program, char **labels,
     if (instruction.type == I_JE) {
         if (s->stackSize < 2) {
             fprintf(stderr, "Doing JE with stack < 2\n");
-            exit(1)
+            exit(1);
         }
         for (size_t i = 0; i < labels_len; i++) {
             if (strcmp(instruction.label, labels[i]) == 0) {
@@ -241,7 +241,7 @@ void run(Instruction *program, char **labels,
     if (instruction.type == I_JNE) {
         if (s->stackSize < 2) {
             fprintf(stderr, "Doing JNE with stack < 2\n");
-            exit(1)
+            exit(1);
         }
         for (size_t i = 0; i < labels_len; i++) {
             if (strcmp(instruction.label, labels[i]) == 0) {
@@ -261,7 +261,7 @@ void run(Instruction *program, char **labels,
     if (instruction.type == I_JA) {
         if (s->stackSize < 2) {
             fprintf(stderr, "Doing JA with stack < 2\n");
-            exit(1)
+            exit(1);
         }
         for (size_t i = 0; i < labels_len; i++) {
             if (strcmp(instruction.label, labels[i]) == 0) {
@@ -281,7 +281,7 @@ void run(Instruction *program, char **labels,
     if (instruction.type == I_JB) {
         if (s->stackSize < 2) {
             fprintf(stderr, "Doing JB with stack < 2\n");
-            exit(1)
+            exit(1);
         }
         for (size_t i = 0; i < labels_len; i++) {
             if (strcmp(instruction.label, labels[i]) == 0) {
@@ -318,6 +318,25 @@ void run(Instruction *program, char **labels,
 
         // Consume dangling zero.
         s->stackSize--;
+        return;
+    }
+
+    if (instruction.type == I_SCAN) {
+        char buffer[128] = { 0 };
+        fgets(buffer, sizeof buffer, stdin);
+
+        // Attempt to interpret it as a number.
+        if ((atoi(buffer) != 0) || (strcmp(buffer, "0") == 0)) {
+            s->stack[s->stackSize++] = atoi(buffer);
+        // Otherwise, we store it as a string.
+        } else {
+            int len = strlen(buffer);
+            s->stack[s->stackSize++] = '\0';
+            for (int i = len - 1; i >= 0; i--) {
+                s->stack[s->stackSize++] = buffer[i];
+            }
+        }
+
         return;
     }
 }

@@ -28,6 +28,7 @@ typedef enum {
     JA,
     JB,
     PRINT,
+    SCAN,
     END_OF_FILE,
     NEWLINE,
     UNKNOWN

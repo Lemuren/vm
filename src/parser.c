@@ -16,14 +16,6 @@ static Token next(Token **tokens) {
     return t;
 }
 
-// Like next() but throws an error if the token isn't of the expected type.
-// static Instruction expect(Token *tokens, TokenType type) {
-//     Instruction 
-//     (void)type;
-//     return tokens[0];
-// 
-// }
-
 static bool isRegister(Token t) {
     return ((t.type == REG_A) ||
             (t.type == REG_B) ||
@@ -286,6 +278,13 @@ static Instruction parse_print(Token **tokens) {
     return instruction;
 }
 
+static Instruction parse_scan(Token **tokens) {
+    Instruction instruction;
+    instruction.type = I_SCAN;
+    next(tokens);
+    return instruction;
+}
+
 static void parse_label(Token **tokens, char **labels,
                         size_t *labels_lookup, size_t *labels_len,
                         int instruction_index) {
@@ -359,6 +358,9 @@ size_t parse(Token *tokens, Instruction *instructions, char **labels,
                 break;
             case PRINT:
                 instruction = parse_print(&tokens);
+                break;
+            case SCAN:
+                instruction = parse_scan(&tokens);
                 break;
             case IDENTIFIER:
                 parse_label(&tokens, labels, labels_lookup, labels_len, instruction_index);

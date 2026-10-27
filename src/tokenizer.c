@@ -93,6 +93,9 @@ size_t tokenize(char *s, Token *tokens) {
         } else if (strcmp(stoken, "PRINT") == 0) {
             type = PRINT;
             text = "PRINT";
+        } else if (strcmp(stoken, "SCAN") == 0) {
+            type = SCAN;
+            text = "SCAN";
         } else if (strcmp(stoken, "\n") == 0) {
             type = NEWLINE;
             text = "";

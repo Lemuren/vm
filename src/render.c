@@ -194,6 +194,10 @@ static void formatInstruction(Instruction instruction, char *out) {
     if (instruction.type == I_PRINT) {
         sprintf(out, "PRINT");
     }
+
+    if (instruction.type == I_SCAN) {
+        sprintf(out, "SCAN");
+    }
 }
 
 static void update_statuswin(State state) {

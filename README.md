@@ -33,3 +33,4 @@ This is very much a WIP project, so beware!
 * The code needs some refactoring and cleanup.
 * There's probably bugs!
 * Error messages for invalid programs is quite obtuse.
+* The `SCAN` instruction doesn't play nice with the visual stack machine.

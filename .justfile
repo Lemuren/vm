@@ -1,14 +1,15 @@
 set quiet
 
 CC := "gcc"
-CFLAGS := "-Wall -Wextra -std=c23 -pedantic -Werror -lncurses -I src/ -g"
+CFLAGS := "-Wall -Wextra -std=c11 -pedantic -Werror -I src/ -g"
+NCURSES := "-lncurses"
 
 _default:
     just --list
 
 # Build.
 build:
-    {{CC}} {{CFLAGS}} src/*.c -o stapel
+    {{CC}} {{CFLAGS}} src/*.c -o stapel {{NCURSES}}
     chmod +x stapel
 
 # Test.

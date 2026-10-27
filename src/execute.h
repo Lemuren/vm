@@ -1,6 +1,7 @@
 #ifndef EXECUTE_H
 #define EXECUTE_H
 
+#include <stdbool.h>
 #include "parser.h"
 
 typedef struct {

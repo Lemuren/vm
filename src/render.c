@@ -198,6 +198,14 @@ static void formatInstruction(Instruction instruction, char *out) {
 
 static void update_statuswin(State state) {
     box(statuswin, 0, 0);
+    mvwprintw(statuswin, 1, 1, "           ");
+    mvwprintw(statuswin, 2, 1, "           ");
+    mvwprintw(statuswin, 3, 1, "           ");
+    mvwprintw(statuswin, 4, 1, "           ");
+    mvwprintw(statuswin, 5, 1, "           ");
+    mvwprintw(statuswin, 6, 1, "           ");
+    mvwprintw(statuswin, 7, 1, "           ");
+
     mvwprintw(statuswin, 1, 1, " IP: %ld ", state.reg_ip);
     mvwprintw(statuswin, 2, 1, " A:  %d ", state.reg_a);
     mvwprintw(statuswin, 3, 1, " B:  %d ", state.reg_b);

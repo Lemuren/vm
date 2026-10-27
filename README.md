@@ -34,3 +34,7 @@ This is very much a WIP project, so beware!
 * There's probably bugs!
 * Error messages for invalid programs is quite obtuse.
 * The `SCAN` instruction doesn't play nice with the visual stack machine.
+
+---
+
+**Note: Generative AI was NOT involved in any part of this project.**

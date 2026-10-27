@@ -219,6 +219,10 @@ void run(Instruction *program, char **labels,
 
     // JE instruction.
     if (instruction.type == I_JE) {
+        if (s->stackSize < 2) {
+            fprintf(stderr, "Doing JE with stack < 2\n");
+            exit(1)
+        }
         for (size_t i = 0; i < labels_len; i++) {
             if (strcmp(instruction.label, labels[i]) == 0) {
                 if (s->stack[s->stackSize-1] == s->stack[s->stackSize-2]) {
@@ -235,6 +239,10 @@ void run(Instruction *program, char **labels,
 
     // JNE instruction.
     if (instruction.type == I_JNE) {
+        if (s->stackSize < 2) {
+            fprintf(stderr, "Doing JNE with stack < 2\n");
+            exit(1)
+        }
         for (size_t i = 0; i < labels_len; i++) {
             if (strcmp(instruction.label, labels[i]) == 0) {
                 if (s->stack[s->stackSize-1] != s->stack[s->stackSize-2]) {
@@ -251,6 +259,10 @@ void run(Instruction *program, char **labels,
 
     // JA instruction.
     if (instruction.type == I_JA) {
+        if (s->stackSize < 2) {
+            fprintf(stderr, "Doing JA with stack < 2\n");
+            exit(1)
+        }
         for (size_t i = 0; i < labels_len; i++) {
             if (strcmp(instruction.label, labels[i]) == 0) {
                 if (s->stack[s->stackSize-1] > s->stack[s->stackSize-2]) {
@@ -267,6 +279,10 @@ void run(Instruction *program, char **labels,
 
     // JB instruction.
     if (instruction.type == I_JB) {
+        if (s->stackSize < 2) {
+            fprintf(stderr, "Doing JB with stack < 2\n");
+            exit(1)
+        }
         for (size_t i = 0; i < labels_len; i++) {
             if (strcmp(instruction.label, labels[i]) == 0) {
                 if (s->stack[s->stackSize-1] < s->stack[s->stackSize-2]) {

@@ -1,6 +1,8 @@
 # Stapel
 Stapel is a tiny, visual stack machine and language.
 
+![screenshot](screen.png)
+
 To build, test, and clean:
 
 ```sh
